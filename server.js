@@ -5,7 +5,6 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var email = require('./mail.js');
 
 http.listen(process.env.PORT, function(){
   console.log('listening on *:'+process.env.PORT);
@@ -26,12 +25,7 @@ app.use(function(req, res, next) {
 //
 //---SOCKET SETUP---
 //
-
-let socket;
-io.on('connection', function(_socket_){
-  socket = _socket_;
-  socket.on('chat message', onNewMessage);
-});
+require('./socket.js').init(io);
 
       
 //
@@ -41,13 +35,3 @@ io.on('connection', function(_socket_){
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/views/index.html');
 });
-
-
-//
-//---HANDLE NEW MESSAGES
-//
-
-function onNewMessage(msg) {
-  socket.broadcast.emit('chat message', msg);
-  console.log(email.send());
-}

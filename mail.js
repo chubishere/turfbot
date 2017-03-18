@@ -14,8 +14,8 @@ let transporter = nodemailer.createTransport({
     from: `Turf <${process.env.EMAIL_U}>`
 });
 
-exports.send = function send(){
-  console.log('Email sending...');
+exports.send = function send(msg){
+  console.log('Emailing...' + msg.substr(0,20));
   let message = {
 
     // Comma separated list of recipients
@@ -25,13 +25,13 @@ exports.send = function send(){
     subject: 'Message for you!', //
 
     // plaintext body
-    text: 'Message for you!',
+    text: msg,
 
     // HTML body
-    html: `<h1>Message for you!<h1/>`,
+    html: `<h1>Message for you!<h1/><p>${msg}</p>`,
 
     // Apple Watch specific HTML body
-    watchHtml: '<b>Watch it</b> Mister'
+    watchHtml: '<b>Watch it</b> Mister!'
   }
   transporter.sendMail(message, (error, info) => {
     if (error) {
